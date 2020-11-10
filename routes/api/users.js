@@ -1,8 +1,8 @@
 const express = require("express");
 const uuid = require("uuid")
-const router = express.Router();
-const { findUser, checkPassword, createToken, createUser, hashPassword } = require('../../userauth/middleware/authenticationLogic')
-router.post(
+const userRoutes = express.Router();
+const { findUser, checkPassword, createToken, createUser, hashPassword, createScoreForUser } = require('../../userauth/middleware/authenticationLogic')
+userRoutes.post(
     "/signup",
     async (req, res) => {
         const {
@@ -15,6 +15,7 @@ router.post(
             const id = uuid.v4()
             const user = await createUser(id, username, hashedpw)
             if (!user) return new Error("username taken");
+            const score = await createScoreForUser(username);
             const token = createToken(id)
             res.status(200).json({
                 message: 'User created successfully!',
@@ -26,7 +27,7 @@ router.post(
     }
 );
 
-router.post(
+userRoutes.post(
     "/login",
     async (req, res) => {
         const {
@@ -46,4 +47,4 @@ router.post(
         }
     }
 );
-module.exports = router 
+module.exports = userRoutes 

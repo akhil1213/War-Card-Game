@@ -2,7 +2,12 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const database = require("../../database/db");
 const { __esModule } = require("uuid/dist/v1");
-
+const createScoreForUser = (username) => {
+    return database.raw(
+        "INSERT INTO scores (username,games_won) VALUES (?,0)",
+        [username]
+    ).then((data) => data.rows[0])
+}
 const createUser = (id, username, password_digest) => {
     return database.raw(
         "INSERT INTO users (id,username, password_digest) VALUES (?,?, ?) returning username",
@@ -24,7 +29,7 @@ const createToken = async (userId) => {
     return new Promise((resolve, reject) => {
         jwt.sign(
             payload,
-            "akhil_loves_react",
+            "akhil_loves_coding!",
             {
                 expiresIn: 10000
             },
@@ -61,4 +66,4 @@ const checkPassword = (passwordAttempt, actualPassword) => {
     )
 }
 
-module.exports = { findUser, checkPassword, createToken, createUser, hashPassword }
+module.exports = { findUser, checkPassword, createToken, createUser, hashPassword, createScoreForUser }
