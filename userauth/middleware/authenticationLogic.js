@@ -60,7 +60,7 @@ const checkPassword = (passwordAttempt, actualPassword) => {
             else if (response) {
                 resolve(response)
             } else {
-                reject(new Error('Passwords do not match.'))
+                reject(new Error("invalid credentials"))
             }
         })
     )

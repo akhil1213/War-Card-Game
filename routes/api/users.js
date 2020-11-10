@@ -36,14 +36,16 @@ userRoutes.post(
         } = req.body;
         try {
             const user = await findUser(username)
-            if (!user) return new Error('No user found')
-            await checkPassword(password, user.password_digest)
+            if (!user) {
+                res.status(404).send("no user found")
+                return
+            }
+            const correct = await checkPassword(password, user.password_digest)
+            if (correct == undefined) res.status(401).send("Invalid credentials")
             const token = await createToken(user.id)
-            // await updateUserToken(token,user)
             res.status(200).json({ message: "Logged in", token })
         } catch (err) {
-            console.log(err.message);
-            res.status(500).send("Error in Saving");
+            res.status(500).send(err.message);
         }
     }
 );
