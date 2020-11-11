@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { NavLink } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import { Typography, TextField, Button } from '@material-ui/core'
 import axios from 'axios'
-
+import {connect} from 'react-redux'
 
 const useStyles = makeStyles(theme => ({
     container: {
@@ -53,7 +53,7 @@ const useStyles = makeStyles(theme => ({
     }
 })
 )
-function Login() {
+function Login(props) {
     const classes = useStyles()
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
@@ -63,24 +63,27 @@ function Login() {
     useEffect(() => {
     }, [])
     function handleClick(e) {
-        if (!validateForm())
+        if (!validateForm()){
             e.preventDefault();
+            return
+        }
+        e.preventDefault()
         const usernameLower = username.toLowerCase()
-        if (selected == 'signup') signup(usernameLower, password, e)
+        if (selected == 'signup') signup(usernameLower, password)
         else {
-            login(usernameLower, password, e)
+            login(usernameLower, password)
         }
     }
-    const login = (username, password, e) => {
+    const login = (username, password) => {
         axios.post("http://localhost:5000/api/login", {
             username,
             password
         }).then((res) => {
             const token = res.data.token;
             localStorage.setItem('token', token);
-            console.log(res)
+            props.history.push('/game')
+            props.setUsername(username)
         }).catch((err) => {
-            e.preventDefault()
             if (err.response.status == 404) {
                 setUsernameError(err.response.data)
                 setPasswordError('')
@@ -98,9 +101,9 @@ function Login() {
         }).then((res) => {
             const token = res.data.token;
             localStorage.setItem('token', token);
-            console.log(res)
+            props.history.push('/game')
+            props.setUsername(username)
         }).catch((err) => {
-            e.preventDefault()
             if (err.response.status == 404) {
                 setUsernameError(err.response.data)
                 setPasswordError('')
@@ -186,17 +189,29 @@ function Login() {
                     />
                     {passwordError.length > 0 && <div className={classes.errormessage}>{passwordError}</div>}
                 </div>
-                <NavLink to={{
-                    pathname: '/',
-                    state: { username }
-                }} style={{ textDecoration: 'none' }} onClick={handleClick}>
+                <Link to={{
+                    pathname: '/game',
+                    state: { "username":username }
+                }} style={{ textDecoration: 'none' }} onClick={(e) => handleClick(e)}>
                     <Button fullWidth className={classes.button}>
                         {selected == 'signup' ? 'signup' : 'login'}
                     </Button>
-                </NavLink>
+                </Link>
             </div>
         </div>
 
     );
 }
-export default Login;  
+
+
+const mapDispatchToProps = dispatch =>{
+    return {
+        setUsername:(username) => {
+          dispatch({type:'SET_USERNAME',payload:username})
+        }
+    }
+  }
+export default connect(
+    null,
+    mapDispatchToProps
+)(Login);

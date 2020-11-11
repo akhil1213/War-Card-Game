@@ -1,7 +1,6 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const database = require("../../database/db");
-const { __esModule } = require("uuid/dist/v1");
 const createScoreForUser = (username) => {
     return database.raw(
         "INSERT INTO scores (username,games_won) VALUES (?,0)",
