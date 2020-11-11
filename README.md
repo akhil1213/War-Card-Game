@@ -9,7 +9,11 @@ War-Game
 * Followed proper rest principles
 * Implemented two tests
 
-[Link to website](http://ec2-18-217-213-221.us-east-2.compute.amazonaws.com:5000)
+[Link to website](http://ec2-18-217-213-221.us-east-2.compute.amazonaws.com:5000) <br />
+You can login using the following credentials: <br />
+username:test <br/>
+password:test123
+
 
 ## Details
 If I had more time I would add features/improvements such as:<br />
