@@ -10,11 +10,9 @@ userRoutes.post(
             password,
         } = req.body;
         try {
-            console.log(password)
             const hashedpw = await hashPassword(password)
             const id = uuid.v4()
             const user = await createUser(id, username, hashedpw)
-            if (!user) return new Error("username taken");
             const score = await createScoreForUser(username);
             const token = createToken(id)
             res.status(200).json({
@@ -22,7 +20,7 @@ userRoutes.post(
                 token
             });
         } catch (err) {
-            res.status(500).send(err);
+            res.status(500).send("username already taken");
         }
     }
 );
@@ -41,7 +39,7 @@ userRoutes.post(
                 return
             }
             const correct = await checkPassword(password, user.password_digest)
-            if (correct == undefined) res.status(401).send("Invalid credentials")
+            if (correct == undefined) res.status(401).send("Invalid password")
             const token = await createToken(user.id)
             res.status(200).json({ message: "Logged in", token })
         } catch (err) {

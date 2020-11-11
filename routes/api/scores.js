@@ -15,7 +15,6 @@ const updateScore = async (username) => {
 
 scoreRoutes.get("/score/:username", auth, async (req, res) => {
     const { username } = req.params
-    console.log(username)
     let score = -1;
     async function perfectUseOfClosures() {
         return db.raw("select games_won from scores where username = ?", [username])

@@ -83,7 +83,7 @@ function Login(props) {
             const token = res.data.token;
             localStorage.setItem('token', token);
             props.setUsername(username)
-            setTimeout(() => props.history.push('/game'), 1000)
+            setTimeout(() => props.history.push('/game'), 500)
             //I know this isnt best practices but redux is async and needed game component to access state imediately!
         }).catch((err) => {
             if (err.response.status == 404) {

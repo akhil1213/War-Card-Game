@@ -1,10 +1,7 @@
 const jwt = require('jsonwebtoken')
 
 function auth(req, res, next) {
-    console.log(req.headers)
     const token = req.header('x-auth-token')
-    console.log(token)
-    console.log("HEADERRRRRR")
     if (!token) {
         res.status(401).json({ msg: "unauthorized" });
         console.log(token)
