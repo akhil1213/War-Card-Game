@@ -28,7 +28,7 @@ function Game(props) {
         setUsersDeck(fullDeck.slice(0, 26))
         setCompDeck(fullDeck.slice(26, 52))
         if (props.username == '' || token == null || token == undefined || token == "") props.history.push('/')
-        axios.get(`http://localhost:5000/api/score/${props.username}`, config)
+        axios.get(`http://ec2-18-217-213-221.us-east-2.compute.amazonaws.com:5000/api/score/${props.username}`, config)
             .then((res) => {
                 setUserTally(res.data.score["games_won"])
             }).catch((err) => {
@@ -36,7 +36,7 @@ function Game(props) {
             })
     }, [])
     const updateUserTally = async function () {
-        axios.put("http://localhost:5000/api/score", { username: props.username }, config)
+        axios.put("http://ec2-18-217-213-221.us-east-2.compute.amazonaws.com:5000/api/score", { username: props.username }, config)
             .then((res) => {
                 setUserTally(userTally + 1)
             }).catch((err) => {

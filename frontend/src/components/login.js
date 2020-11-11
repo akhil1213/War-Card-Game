@@ -76,7 +76,7 @@ function Login(props) {
         }
     }
     const login = (username, password) => {
-        axios.post("http://localhost:5000/api/login", {
+        axios.post("http://ec2-18-217-213-221.us-east-2.compute.amazonaws.com:5000/api/login", {
             username,
             password
         }).then((res) => {
@@ -97,7 +97,7 @@ function Login(props) {
         })
     }
     const signup = (username, password, e) => {
-        axios.post("http://localhost:5000/api/signup", {
+        axios.post("http://ec2-18-217-213-221.us-east-2.compute.amazonaws.com:5000/api/signup", {
             username,
             password
         }).then((res) => {
