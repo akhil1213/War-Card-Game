@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import { Typography, TextField, Button } from '@material-ui/core'
 import axios from 'axios'
-import {connect} from 'react-redux'
+import { connect } from 'react-redux'
 
 const useStyles = makeStyles(theme => ({
     container: {
@@ -63,7 +63,7 @@ function Login(props) {
     useEffect(() => {
     }, [])
     function handleClick(e) {
-        if (!validateForm()){
+        if (!validateForm()) {
             e.preventDefault();
             return
         }
@@ -158,7 +158,7 @@ function Login(props) {
                 <Button onClick={() => setSelected('signup')} className={[classes.optionButton, selected == 'signup' ? classes.selectedButton : null]}>
                     Signup
                 </Button>
-                <Button onClick={() => setSelected('login')} className={[classes.optionButton, selected == 'login' ? classes.selectedButton : null]}>
+                <Button data-testid="setLogin" onClick={() => setSelected('login')} className={[classes.optionButton, selected == 'login' ? classes.selectedButton : null]}>
                     Login
                 </Button>
             </div>
@@ -191,9 +191,9 @@ function Login(props) {
                 </div>
                 <Link to={{
                     pathname: '/game',
-                    state: { "username":username }
+                    state: { "username": username }
                 }} style={{ textDecoration: 'none' }} onClick={(e) => handleClick(e)}>
-                    <Button fullWidth className={classes.button}>
+                    <Button data-testid="login" fullWidth className={classes.button}>
                         {selected == 'signup' ? 'signup' : 'login'}
                     </Button>
                 </Link>
@@ -204,13 +204,13 @@ function Login(props) {
 }
 
 
-const mapDispatchToProps = dispatch =>{
+const mapDispatchToProps = dispatch => {
     return {
-        setUsername:(username) => {
-          dispatch({type:'SET_USERNAME',payload:username})
+        setUsername: (username) => {
+            dispatch({ type: 'SET_USERNAME', payload: username })
         }
     }
-  }
+}
 export default connect(
     null,
     mapDispatchToProps

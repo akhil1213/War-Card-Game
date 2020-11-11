@@ -1,10 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios'
-import { useLocation } from 'react-router-dom'
+import React, { useState, useEffect } from 'react'
+import createDeck from './src/components/Game/gameObject'
 import { Typography, Button } from '@material-ui/core'
-import { connect } from 'react-redux'
-import createDeck from './gameObject'
-function Game(props) {
+
+export default function Game(props) {
     const [usersDeck, setUsersDeck] = useState([])
     const [compDeck, setCompDeck] = useState([])
     const [usersWonDeck, setUsersWonDeck] = useState([])
@@ -16,35 +14,11 @@ function Game(props) {
     const [winningArr, setWinningArr] = useState([])
     const [playDisabled, setPlayDisabled] = useState(false)
     const [userTally, setUserTally] = useState(null)
-    const token = localStorage.getItem('token')
-    const config = {
-        headers: {
-            "Content-type": "application/json",
-            'x-auth-token': `${token}`
-        }
-    }
     useEffect(() => {
         const fullDeck = createDeck()
         setUsersDeck(fullDeck.slice(0, 26))
         setCompDeck(fullDeck.slice(26, 52))
-        if (props.username == '' || token == null || token == undefined || token == "") props.history.push('/')
-        axios.get(`http://localhost:5000/api/score/${props.username}`, config)
-            .then((res) => {
-                setUserTally(res.data.score["games_won"])
-            }).catch((err) => {
-                localStorage.setItem("token", "")//token has expired
-            })
     }, [])
-    const updateUserTally = async function () {
-        axios.put("http://localhost:5000/api/score", { username: props.username }, config)
-            .then((res) => {
-                setUserTally(userTally + 1)
-                console.log("hi it works")
-            }).catch((err) => {
-                localStorage.setItem("token", "")//token has expired
-                console.log(err)
-            })
-    }
     const deckPop = () => {
         if (winningArr.length > 0) {
             tied(null)
@@ -98,7 +72,6 @@ function Game(props) {
             if (compWonDeck.length < 4) {
                 reset()
                 setWinner('You won!')
-                updateUserTally()
                 return
             } else {
                 setCompDeck(compDeck.concat(compWonDeck))
@@ -133,7 +106,6 @@ function Game(props) {
         } if (compCard == undefined) {
             setWinner("user won")
             reset()
-            updateUserTally()
             return
         }
         const winner = usersCard.biggerCard(compCard)
@@ -151,38 +123,6 @@ function Game(props) {
             setWinningArr(winnings)
             setTie(`theres another tie and winnings length is ${winnings.length}`)
         }
-        // winnings.concat([usersDeck.slice(usersDeck.length - 4), compDeck.slice(compDeck.length - 4)])
-        // console.log(winnings)
-        // for (i; i >= 0; i -= 3) {
-        // console.log(usersDeck[i], compDeck[j])
-        // }
-        // while (true) {
-        //     console.log(winnings)
-        //     if (iterations % 4 == 0) {
-        //         if (usersDeck[i].biggerCard(compDeck[j]) == 1) {
-        //             setUsersDeck(usersDeck.concat(winnings))
-        //             break
-        //         } else if (usersDeck[i].biggerCard(compDeck[j]) == -1) {
-        //             setCompDeck(compDeck.concat(winnings))
-        //             break
-        //         }
-        //     }
-        //     if (iterations == 40) break;
-        //     if (i == 0 && j != 0 && usersWonDeck.length == 0) return "user lost"
-        //     if (i != 0 && j == 0 && compWonDeck.length == 0) return "comp lost"
-        //     if (i == 0 && j != 0) {
-        //         i = usersWonDeck.length - 1;
-        //         setUsersDeck(usersWonDeck)
-        //         setUsersWonDeck([])
-        //     } if (i != 0 && j == 0) {
-        //         j = compWonDeck.length - 1;
-        //         setCompDeck(compWonDeck)
-        //         setCompWonDeck([])
-        //     }
-        //     winnings.push(usersDeck[i--])
-        //     winnings.push(compDeck[j--])
-        //     iterations++;
-        // }
     }
 
     const checkStateOfGame = () => {
@@ -194,7 +134,6 @@ function Game(props) {
         if (compDeck.length <= 0 && compWonDeck.length <= 0) {
             reset()
             setWinner("user won")
-            updateUserTally()
             return
         }
         if (usersDeck.length <= 0 && usersWonDeck.length > 0) {
@@ -230,15 +169,8 @@ function Game(props) {
             </Typography>
             <div style={{ display: 'flex', justifyContent: 'space-between', }}>
                 <div>
-                    <Typography>Users regular deck size{usersDeck.length}</Typography>
-                    <Typography>Users won deck size:{usersWonDeck.length}</Typography>
-                    {/* {usersWonDeck.map((card, i) =>
-                        <div key={i}>
-                            <Typography variant={'h6'}>
-                                {card.denomination} {card.suite}
-                            </Typography>
-                        </div>
-                    )} */}
+                    <Typography data-testid="usersDeckLength">{usersDeck.length}</Typography>
+                    <Typography >{usersWonDeck.length}</Typography>
                 </div>
                 <div>
                     <Typography>You chose a {userChoice.denomination}</Typography>
@@ -246,30 +178,10 @@ function Game(props) {
                     {tie}
                 </div>
                 <div>
-                    <Typography>Comps regular deck size{compDeck.length}</Typography>
+                    <Typography data-testid="compDeckLength" >{compDeck.length}</Typography>
                     <Typography>Comps won deck size:{compWonDeck.length}</Typography>
-                    {/* {compWonDeck.map((card, i) =>
-                        <div key={i}>
-                            <Typography variant={'h6'}>
-                                {card.denomination} {card.suite}
-                            </Typography>
-                        </div>
-                    )} */}
                 </div>
             </div>
-
-
         </div>
     )
 }
-
-const mapStateToProps = state => (
-    console.log(state),
-    {
-        username: state.username
-    }
-)
-export default connect(
-    mapStateToProps,
-    null
-)(Game);

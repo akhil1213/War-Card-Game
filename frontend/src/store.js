@@ -1,34 +1,34 @@
-import { createStore,applyMiddleware,combineReducers } from 'redux';
+import { createStore, applyMiddleware, combineReducers } from 'redux';
 import thunk from 'redux-thunk';
 const middleware = [thunk];
 const initialState = {
-    username:''
+    username: ''
 }
-function userReducer(state = initialState,action){
-    switch(action.type){
+function userReducer(state = initialState, action) {
+    switch (action.type) {
         case 'SET_USERNAME':
-            return{
+            return {
                 ...state,
-                username:action.payload
+                username: action.payload
             }
         default:
             return state
-        }
+    }
 }
-function saveToLocalStorage(state){
-    try{
+function saveToLocalStorage(state) {
+    try {
         const serializedState = JSON.stringify(state)
         localStorage.setItem('state', serializedState)
-    }catch(e){
+    } catch (e) {
         console.log(e)
     }
 }
-function loadFromLocalStorage(){
-    try{
+function loadFromLocalStorage() {
+    try {
         const serializedState = localStorage.getItem('state')
         if (serializedState === null) return undefined
         return JSON.parse(serializedState)
-    }catch(e){
+    } catch (e) {
         console.log(e)
         return undefined
     }
@@ -36,8 +36,7 @@ function loadFromLocalStorage(){
 
 const persistedState = loadFromLocalStorage()
 
-const store = createStore(userReducer, persistedState, applyMiddleware(...middleware)
-+  window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
+const store = createStore(userReducer, persistedState, applyMiddleware(...middleware));
 
 store.subscribe(() => saveToLocalStorage(store.getState()))
 
