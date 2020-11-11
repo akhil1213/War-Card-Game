@@ -1,7 +1,7 @@
 import React from 'react'
 import { render, fireEvent, cleanup, screen } from '@testing-library/react';
 import App from './App';
-import Game from '../Game'
+import Game from '../GameTest'
 import "@testing-library/jest-dom"
 
 afterEach(() => {
