@@ -61,6 +61,7 @@ function Login(props) {
     const [passwordError, setPasswordError] = useState('');
     const [selected, setSelected] = useState('signup')
     useEffect(() => {
+        // props.setUsername("")
     }, [])
     function handleClick(e) {
         if (!validateForm()) {
@@ -81,8 +82,9 @@ function Login(props) {
         }).then((res) => {
             const token = res.data.token;
             localStorage.setItem('token', token);
-            props.history.push('/game')
             props.setUsername(username)
+            setTimeout(() => props.history.push('/game'), 1000)
+            //I know this isnt best practices but redux is async and needed game component to access state imediately!
         }).catch((err) => {
             if (err.response.status == 404) {
                 setUsernameError(err.response.data)
@@ -101,9 +103,10 @@ function Login(props) {
         }).then((res) => {
             const token = res.data.token;
             localStorage.setItem('token', token);
-            props.history.push('/game')
             props.setUsername(username)
+            setTimeout(() => props.history.push('/game'), 1000)
         }).catch((err) => {
+            console.log(err)
             if (err.response.status == 404) {
                 setUsernameError(err.response.data)
                 setPasswordError('')

@@ -25,19 +25,4 @@ test('user types in credentials and clicks login', () => {
   const loginButton = screen.getByTestId("login")
   fireEvent.click(setLoginButton)
   fireEvent.click(loginButton)
-  // expect(screen.getByTestId("tally").value).toBe("3")
-  // wrapper = shallow(<App />);
-  // wrapper.find('.MuiInputBase-input MuiOutlinedInput-input').simulate('change', { target: { name: 'username', value: 'test' } });
-  // expect(wrapper.state('username')).toEqual('test');
-  // wrapper.find('input[type="password"]').simulate('change', { target: { name: 'password', value: 'Test123' } });
-  // expect(wrapper.state('password')).toEqual('Test123');
-  // wrapper.find('button').simulate('click');
-  // const username = document.getElementsByName("username")[0]
-  // username.value = "test";
-  // const pw = document.getElementsByName("password")[0]
-  // pw.value = "Test123";
-  // expect(username).toHaveTextContent('test')
-  // const loginButton = document.getElementsByClassName("MuiButtonBase-root MuiButton-root MuiButton-text makeStyles-button-3 MuiButton-fullWidth")[0]
-  // fireEvent.input(loginButton);
-  // expect(document.getElementsByClassName("tally")[0]).toHaveTextContent("5")
 });
